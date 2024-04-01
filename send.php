@@ -21,6 +21,7 @@ if (isset($_POST['share_message'])) {
         // Save the encrypted message to the database
         $messageId = saveEncryptedMessage($encryptedMessage, $recipientEmail);
         $successMessage = "Message shared successfully !!";
+        unset($_POST);
     } else {
         $errorMessage =  "Recipient email not found. Please add the recipient first.";
     }
@@ -53,11 +54,11 @@ if (isset($_POST['share_message'])) {
                         <form method="post" onsubmit="return validateEncryptionKey()">
                             <div class="mb-3">
                                 <label for="recipient_email" class="form-label">Recipient:</label>
-                                <input type="email" id="recipient_email" name="recipient_email" class="form-control" required>
+                                <input type="email" id="recipient_email" name="recipient_email" class="form-control" value="<?php if(isset($_POST["recipient_email"])){echo $_POST['recipient_email'];} ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="message" class="form-label">Message:</label>
-                                <textarea id="message" name="message" class="form-control" rows="4" required></textarea>
+                                <textarea id="message" name="message" class="form-control" rows="4" required><?php if(isset($_POST["message"])){echo $_POST['message'];} ?></textarea>
                             </div>
                             <div class="text-center">
                                 <button type="submit" name="share_message" class="btn btn-primary">Share Message</button>
@@ -74,15 +75,16 @@ if (isset($_POST['share_message'])) {
     <script src="js/bootstrap.bundle.min.js"></script>
     <script>
         function validateEncryptionKey() {
-            var encryptionKeyInput = document.getElementById("encryption_key");
-            var encryptionKeyError = document.getElementById("encryptionKeyError");
-            if (encryptionKeyInput.value.length !== 16) {
-                encryptionKeyInput.classList.add("is-invalid");
-                encryptionKeyError.style.display = "block";
+            var encryptionKeyInput = $("#encryption_key");
+            var encryptionKeyError = $("#encryptionKeyError");
+            
+            if (encryptionKeyInput.val().length !== 16) {
+                encryptionKeyInput.addClass("is-invalid");
+                encryptionKeyError.css("display", "block");
                 return false;
             } else {
-                encryptionKeyInput.classList.remove("is-invalid");
-                encryptionKeyError.style.display = "none";
+                encryptionKeyInput.removeClass("is-invalid");
+                encryptionKeyError.css("display", "none");
                 return true;
             }
         }

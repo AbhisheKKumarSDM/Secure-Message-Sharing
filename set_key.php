@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $decryptionKey = trim($_POST["decryption_key"]);
     // Check if email is valid
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errorMessage = "Invalid email address format. Please enter a valid email.";
+        $errorMessage = "Invalid email address format. Please enter a valid email !";
     } else {
         // Check if email already exists
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
@@ -16,12 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $existingUser = $stmt->fetch();
 
         if ($existingUser) {
-            $errorMessage = "Email address already exists. Please use a different email.";
+            $errorMessage = "Email address already exists. Please use a different email !";
         } else {
             // Insert new user into the database
             $stmt = $pdo->prepare("INSERT INTO users (username, email, decryption_key) VALUES (?, ?, ?)");
             $stmt->execute([$username, $email, $decryptionKey]);
-            $successMessage = "User added successfully!";
+            $successMessage = "User and decryption key added successfully!";
+            unset($_POST);
         }
     }
 }
@@ -52,11 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username:</label>
-                                <input type="text" id="username" name="username" class="form-control" required>
+                                <input type="text" id="username" name="username" class="form-control" value="<?php if(isset($_POST["username"])){echo $_POST['username'];} ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email:</label>
-                                <input type="email" id="email" name="email" class="form-control" required>
+                                <input type="email" id="email" name="email" class="form-control" value="<?php if(isset($_POST["email"])){echo $_POST['email'];} ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="decryption_key" class="form-label">Decryption Key:</label>

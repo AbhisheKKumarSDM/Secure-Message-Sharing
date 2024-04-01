@@ -44,10 +44,10 @@ if (isset($_POST['read_message'])) {
                 $message = "No messages found for the provided email.";
             }
         } else {
-            $message = "Incorrect decryption key.";
+            $message = "Wrong Credentials !!";
         }
     } else {
-        $message = "Email not found.";
+        $message = "Wrong Credentials !!";
     }
 }
 
@@ -78,7 +78,7 @@ if (isset($_POST['read_message'])) {
                         } else {
                             echo '<form method="post">';
                             echo '<div class="mb-3">';
-                            echo '<label for="email" class="form-label">Recipient:</label>';
+                            echo '<label for="email" class="form-label">Your Email:</label>';
                             echo '<input type="email" id="email" name="email" class="form-control" required>';
                             echo '</div>';
                             echo '<div class="mb-3">';
